@@ -87,12 +87,7 @@ return {
 				},
 				tinymist = {},
 				ts_ls = {},
-				ruby_lsp = {
-					init_options = {
-						formatter = "standard",
-						linters = { "standard" },
-					},
-				},
+				ruby_lsp = {},
 				yamlls = {
 					capabilities = {
 						textDocument = {
@@ -157,8 +152,18 @@ return {
 
 					map("<leader>lh", vim.lsp.buf.hover, "Hover")
 					map("<leader>lr", vim.lsp.buf.rename, "Rename")
-					map("<leader>la", vim.lsp.buf.code_action, "Code Action", { "n", "x" })
-					map("<leader>ld", vim.lsp.buf.declaration, "Declaration")
+					map("<leader>la", vim.lsp.buf.code_action, "Code action", { "n", "x" })
+					map("<leader>ld", vim.lsp.buf.definition, "Definition")
+					map("<leader>lD", vim.lsp.buf.declaration, "Declaration")
+
+					local function quickfix()
+						vim.lsp.buf.code_action({
+							filter = function(a) return a.isPreferred end,
+							apply = true
+						})
+					end
+
+					map("<leader>qf", quickfix)
 
 					-- The following two autocommands are used to highlight references of the
 					-- word under your cursor when your cursor rests there for a little while.
@@ -168,7 +173,7 @@ return {
 					local client = vim.lsp.get_client_by_id(event.data.client_id)
 					if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
 						local highlight_augroup = vim.api.nvim_create_augroup(
-						"kickstart-lsp-highlight", { clear = false })
+							"kickstart-lsp-highlight", { clear = false })
 						vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
 							buffer = event.buf,
 							group = highlight_augroup,
@@ -186,8 +191,11 @@ return {
 								{ clear = true }),
 							callback = function(event2)
 								vim.lsp.buf.clear_references()
-								vim.api.nvim_clear_autocmds({ group =
-								"kickstart-lsp-highlight", buffer = event2.buf })
+								vim.api.nvim_clear_autocmds({
+									group =
+									"kickstart-lsp-highlight",
+									buffer = event2.buf
+								})
 							end,
 						})
 					end
