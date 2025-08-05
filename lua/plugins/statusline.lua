@@ -7,7 +7,9 @@ return {
       disabled_filetypes = { statusline = { "neo-tree", "Outline", "snacks_picker_list" } },
     },
     sections = {
-      lualine_a = {}, -- hide mode
+      lualine_a = {
+        "mode",
+      },
       lualine_b = {
         "branch",
         "diff",
