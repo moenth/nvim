@@ -13,3 +13,4 @@ o.smartindent = true
 o.tabstop = 2
 o.updatetime = 250
 o.relativenumber = true
+o.number = true
