@@ -22,7 +22,8 @@ return {
 				toml = { "taplo" },
 				typst = { "typstfmt" },
 				yaml = { "yamlfmt" },
-				ruby = { "rubocop" }
+				ruby = { "rubocop" },
+				rake = { "rubocop" }
 			},
 		},
 		config = function(_, opts)
@@ -37,8 +38,16 @@ return {
 			conform.formatters.yamlfmt = {
 				prepend_args = { "-formatter", "indent=2,include_document_start=true,retain_line_breaks_single=true" },
 			}
-			conform.formatters.ruby = {
-				prepend_args = { "-A" }
+			conform.formatters.rubocop = {
+				args = {
+					"--server",
+					"-A",
+					"-f",
+					"quiet",
+					"--stderr",
+					"--stdin",
+					"$FILENAME",
+				},
 			}
 		end,
 	},
